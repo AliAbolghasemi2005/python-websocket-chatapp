@@ -48,13 +48,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         return redirect("/")
-    return '''
-        <form method="POST">
-            <input name="username" required>
-            <input name="password" type="password" required>
-            <button type="submit">Register</button>
-        </form>
-    '''
+    return render_template("register.html")
 
 @app.route("/chat")
 def chat():

@@ -1,0 +1,119 @@
+/* ========= Base Layout ========= */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
+  margin: 0;
+  padding: 40px 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ========= Headers ========= */
+h1, h2 {
+  margin-top: 0;
+  font-size: 28px;
+  text-align: center;
+}
+
+/* ========= Forms ========= */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #1e1e1e;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+}
+
+input {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2b2b2b;
+  color: white;
+  font-size: 16px;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+/* ========= Buttons ========= */
+button {
+  padding: 12px;
+  background: #ff5050;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #ff1a1a;
+}
+
+/* ========= Chat Messages ========= */
+ul#messages {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #333;
+  background: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: inset 0 0 5px #000;
+}
+
+ul#messages li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #2a2a2a;
+  border-radius: 6px;
+  font-size: 15px;
+  word-wrap: break-word;
+}
+
+/* ========= Message Input ========= */
+#msg {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #2b2b2b;
+  color: #fff;
+}
+
+/* ========= Navigation / Links ========= */
+p {
+  margin-top: 20px;
+  text-align: center;
+}
+
+a {
+  color: #ff8080;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ========= Responsive Tweaks ========= */
+@media (max-width: 500px) {
+  body {
+    padding: 20px 10px;
+  }
+
+  form {
+    padding: 20px;
+  }
+}
