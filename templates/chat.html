@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat</title>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h2>Welcome, {{ username }}</h2>
+  <ul id="messages">
+    {% for msg in history %}
+      <li>{{ msg.user }}: {{ msg.message }}</li>
+    {% endfor %}
+  </ul>
+  <input id="msg" autocomplete="off"><button onclick="sendMsg()">Send</button>
+
+  <script>
+    var socket = io();
+    function sendMsg() {
+      const msg = document.getElementById("msg").value;
+      socket.emit("send_message", { message: msg });
+      document.getElementById("msg").value = "";
+    }
+    socket.on("receive_message", data => {
+      const li = document.createElement("li");
+      li.textContent = `${data.user}: ${data.message}`;
+      document.getElementById("messages").appendChild(li);
+    });
+  </script>
+</body>
+</html>
