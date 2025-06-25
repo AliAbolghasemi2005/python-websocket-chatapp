@@ -83,6 +83,12 @@ def register():
 def chat():
     if "username" not in session:
         return redirect("/")
+
+    user = User.query.filter_by(username=session["username"]).first()
+    if not user:
+        flash("❌ Your account no longer exists. Please log in again.")
+        session.clear()
+        return redirect("/")
     
     messages = Message.query.all()
     history = []
