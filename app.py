@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit
 from werkzeug.security import generate_password_hash, check_password_hash
 from cryptography.fernet import Fernet
+from datetime import datetime
+import pytz
 import re
 import os
 
@@ -35,6 +37,7 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
     encrypted = db.Column(db.LargeBinary)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -80,13 +83,15 @@ def register():
 def chat():
     if "username" not in session:
         return redirect("/")
+    
     messages = Message.query.all()
     history = []
     for msg in messages:
         try:
             history.append({
                 "user": msg.username,
-                "message": cipher.decrypt(msg.encrypted).decode()
+                "message": cipher.decrypt(msg.encrypted).decode(),
+                "timestamp": msg.timestamp.strftime("%Y-%m-%d %H:%M:%S")
             })
         except:
             continue
@@ -101,11 +106,20 @@ def logout():
 def handle_message(data):
     username = session.get("username", "Anonymous")
     encrypted = cipher.encrypt(data["message"].encode())
-    msg = Message(username=username, encrypted=encrypted)
+
+    tehran = pytz.timezone("Asia/Tehran")
+    now = datetime.now(tehran)
+
+    msg = Message(username=username, encrypted=encrypted, timestamp=now)
     db.session.add(msg)
     db.session.commit()
+
     decrypted = cipher.decrypt(encrypted).decode()
-    emit("receive_message", {"user": username, "message": decrypted}, broadcast=True)
+    emit("receive_message", {
+        "user": username,
+        "message": decrypted,
+        "timestamp": now.strftime("%Y-%m-%d %H:%M:%S")
+    }, broadcast=True)
 
 if __name__ == "__main__":
     with app.app_context():

@@ -10,7 +10,7 @@
   <h2>Welcome, {{ username }}</h2>
   <ul id="messages">
     {% for msg in history %}
-      <li>{{ msg.user }}: {{ msg.message }}</li>
+  <li>[{{ msg.timestamp }}] {{ msg.user }}: {{ msg.message }}</li>
     {% endfor %}
   </ul>
   <input id="msg" autocomplete="off"><button onclick="sendMsg()">Send</button>
@@ -24,7 +24,7 @@
     }
     socket.on("receive_message", data => {
       const li = document.createElement("li");
-      li.textContent = `${data.user}: ${data.message}`;
+      li.textContent = `[${data.timestamp}] ${data.user}: ${data.message}`;
       document.getElementById("messages").appendChild(li);
     });
   </script>
