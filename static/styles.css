@@ -107,6 +107,31 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ========= Flash ========= */
+
+ul.flash {
+  list-style: none;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  background-color: #333;
+  box-shadow: 0 0 5px #000;
+}
+
+ul.flash li {
+  padding: 10px;
+  color: #fff;
+  background-color: #444;
+  border-left: 4px solid #ff5050;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+ul.flash li:before {
+  content: "⚠ ";
+  color: #ff8080;
+}
+
 /* ========= Responsive Tweaks ========= */
 @media (max-width: 500px) {
   body {

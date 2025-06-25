@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash, get_flashed_messages
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit
 from werkzeug.security import generate_password_hash, check_password_hash
 from cryptography.fernet import Fernet
+import re
 import os
 
 app = Flask(__name__)
@@ -27,6 +28,9 @@ class Message(db.Model):
 
 @app.route("/", methods=["GET", "POST"])
 def login():
+    if "username" in session:
+        return redirect("/chat")
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -34,19 +38,31 @@ def login():
         if user and check_password_hash(user.password, password):
             session["username"] = username
             return redirect("/chat")
-        return "Invalid credentials"
+        flash("❌ Invalid username or password.")
     return render_template("login.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if "username" in session:
+        return redirect("/chat")
+
     if request.method == "POST":
         username = request.form["username"]
-        password = generate_password_hash(request.form["password"])
+        password = request.form["password"]
+
         if User.query.filter_by(username=username).first():
-            return "Username already exists"
-        new_user = User(username=username, password=password)
+            flash("❌ Username already exists.")
+            return redirect("/register")
+
+        if len(password) < 8 or not re.search(r"[a-zA-Z]", password) or not re.search(r"\d", password):
+            flash("❌ Password must be at least 8 characters and include letters and numbers.")
+            return redirect("/register")
+
+        hashed = generate_password_hash(password)
+        new_user = User(username=username, password=hashed)
         db.session.add(new_user)
         db.session.commit()
+        flash("✅ Registration successful! You can now log in.")
         return redirect("/")
     return render_template("register.html")
 
@@ -65,6 +81,11 @@ def chat():
         except:
             continue
     return render_template("chat.html", username=session["username"], history=history)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 @socketio.on("send_message")
 def handle_message(data):
