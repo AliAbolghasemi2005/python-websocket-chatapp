@@ -12,7 +12,17 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///chat.db"
 db = SQLAlchemy(app)
 socketio = SocketIO(app)
 
-key = Fernet.generate_key()
+# Load or create persistent encryption key
+KEY_FILE = "fernet.key"
+
+if os.path.exists(KEY_FILE):
+    with open(KEY_FILE, "rb") as f:
+        key = f.read()
+else:
+    key = Fernet.generate_key()
+    with open(KEY_FILE, "wb") as f:
+        f.write(key)
+        
 cipher = Fernet(key)
 
 # Models
