@@ -47,8 +47,13 @@
     e.preventDefault();
     sendMsg();
   }
-
   });
+
+  // Scroll to bottom on page load
+  window.onload = function () {
+    const msgBox = document.getElementById("messages");
+    msgBox.scrollTop = msgBox.scrollHeight;
+  };
   </script>
 
 </body>
